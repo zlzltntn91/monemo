@@ -11,7 +11,7 @@ export default function Index() {
                 height: 40,
                 shadowOffset: {width: 2, height: 1},
                 shadowOpacity: 0.2,
-                backgroundColor: 'aliceblue',
+                // backgroundColor: 'aliceblue',
                 justifyContent: 'center'
             }}
             >

@@ -1,5 +1,4 @@
-import {SafeAreaProvider} from "react-native-safe-area-context";
-import {SafeAreaView} from "react-native";
+import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import React, {ReactNode} from "react";
 
 export default function MyView({children}: { children: ReactNode }) {
