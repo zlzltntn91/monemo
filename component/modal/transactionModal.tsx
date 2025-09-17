@@ -64,11 +64,11 @@ function TransactionModal() {
     useEffect(() => {
         if (isCalendarVisible) {
             animatedHeight.value = withSequence(
-                withTiming( 0, {duration: 500}),
+                withTiming(0, {duration: 500}),
             );
 
             opacity.value = withSequence(
-                withTiming(1, { duration: 800 }),
+                withTiming(1, {duration: 800}),
             );
         }
     }, [isCalendarVisible]);
@@ -230,19 +230,19 @@ function TransactionModal() {
                             </Text>
                             <MyCard style={{width: 100, backgroundColor: '#E0E0E0', marginRight: 8, height: '90%'}}>
                                 <Pressable onPress={() => {
-                                    if(!isCalendarVisible){
+                                    if (!isCalendarVisible) {
                                         setIsCalendarVisible(true)
                                         return;
                                     }
                                     opacity.value = withSequence(
-                                        withTiming((0), { duration: 800 }),
+                                        withTiming((0), {duration: 500}),
                                     );
                                     animatedHeight.value = withSequence(
-                                        withTiming((-10), {duration: 500}),
+                                        withTiming((-10), {duration: 400}),
                                     );
                                     setTimeout(() => {
                                         setIsCalendarVisible(!isCalendarVisible);
-                                    }, 450);
+                                    }, 300);
                                 }}>
                                     <Text
                                         style={{
