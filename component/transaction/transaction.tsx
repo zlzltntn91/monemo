@@ -1,8 +1,9 @@
-import React, {useContext} from 'react';
-import {View, Text} from "react-native";
-import CalendarContext from "@/component/calendar/calendarContext";
+
+import React, {SyntheticEvent, useCallback, useContext, useState} from 'react';
+import {LayoutChangeEvent, Text, View} from "react-native";
+import CalendarContext from "@/component/calendar/context/calendarContext";
 import {TransactionT} from '@/constatns/types/types'
-import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 type Props = {
     transaction: TransactionT
@@ -10,39 +11,53 @@ type Props = {
 
 function Transaction(props: Props) {
     const context = useContext(CalendarContext);
+    const [fontSize, setFontSize] = useState(16);
     const {transaction} = props;
+    const onLayoutHandler = useCallback((e: LayoutChangeEvent) => {
+        setFontSize(e.nativeEvent.layout.height / 2);
+    }, []);
     return (
-        <Text style={{
-            flexShrink: 0,
-            marginBottom: 2,
-            width: '96%',
-            height: 25,
-            justifyContent: 'center',
-            alignSelf: 'center',
-            fontWeight: 500,
-            paddingLeft: 8,
-            backgroundColor: transaction.type === 'income' ? '#BBDEFB' : '#FFCDD2',
+        <View style={{
+            backgroundColor: transaction.type !== 'income' ? '#BBDEFB' : '#FFCDD2',
+            flexDirection: 'row',
+            marginLeft: 4,
+            marginRight: 4,
+            // minWidth: 10,
+            height: 20,
             borderRadius: 8,
+            alignItems: 'center',
         }}
-              {...props}
-              numberOfLines={1}
-              ellipsizeMode={'tail'}
-        >            {transaction.type === 'income' ?
-            <MaterialCommunityIcons name={'chevron-up'}
-                                    style={{top: 2}}
-                                    size={20}
-                                    color={'blue'}
-            ></MaterialCommunityIcons>
-            :
-            <MaterialCommunityIcons name={'chevron-down'}
-                                    size={20}
-                                    style={{top: 2}}
-                                    color={'red'}
-            ></MaterialCommunityIcons>
-        }
-            {' '}
-            {transaction.amount?.toLocaleString()}
-        </Text>
+              onLayout={onLayoutHandler}>
+            {transaction.type === 'income' ?
+                <MaterialCommunityIcons name={'chevron-up'}
+                                        style={{paddingLeft: 4}}
+                                        size={fontSize + 4}
+                                        color={'red'}
+                ></MaterialCommunityIcons>
+                :
+                <MaterialCommunityIcons name={'chevron-down'}
+                                        style={{paddingLeft: 4}}
+                                        size={fontSize + 4}
+                                        color={'blue'}
+                ></MaterialCommunityIcons>
+            }
+            <Text style={{
+                fontSize: fontSize,
+                flex: 1,           // 이 속성 추가
+                textAlign: 'right',
+                paddingRight: 4,
+                // flexShrink: 1      // 이 속성 추가
+            }}
+                  {...props}
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}  // 닫는 괄호 추가
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={true}
+                  minimumFontScale={0.5}
+            >
+                {transaction.amount?.toLocaleString()}
+            </Text>
+        </View>
     );
 }
 

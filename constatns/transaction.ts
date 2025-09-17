@@ -2,6 +2,89 @@ import {TransactionT} from '@/constatns/types/types';
 import {DateTime} from 'luxon'
 
 export const transactions: TransactionT[] = [
+    // August 2025 transactions
+    {
+        id: 89,
+        createAt: DateTime.local(2025, 8, 5).toJSDate(),
+        amount: 15000,
+        currency: 'won',
+        type: 'expense',
+        memo: '외식',
+    },
+    {
+        id: 90,
+        createAt: DateTime.local(2025, 8, 10).toJSDate(),
+        amount: 50000,
+        currency: 'won',
+        type: 'income',
+        memo: '용돈',
+    },
+    {
+        id: 91,
+        createAt: DateTime.local(2025, 8, 15).toJSDate(),
+        amount: 8000,
+        currency: 'won',
+        type: 'expense',
+        memo: '영화',
+    },
+    {
+        id: 92,
+        createAt: DateTime.local(2025, 8, 20).toJSDate(),
+        amount: 100000,
+        currency: 'won',
+        type: 'income',
+        memo: '상여금',
+    },
+    {
+        id: 93,
+        createAt: DateTime.local(2025, 8, 25).toJSDate(),
+        amount: 12000,
+        currency: 'won',
+        type: 'expense',
+        memo: '택시',
+    },
+    // October 2025 transactions
+    {
+        id: 94,
+        createAt: DateTime.local(2025, 10, 3).toJSDate(),
+        amount: 25000,
+        currency: 'won',
+        type: 'expense',
+        memo: '쇼핑',
+    },
+    {
+        id: 95,
+        createAt: DateTime.local(2025, 10, 8).toJSDate(),
+        amount: 75000,
+        currency: 'won',
+        type: 'income',
+        memo: '알바비',
+    },
+    {
+        id: 96,
+        createAt: DateTime.local(2025, 10, 15).toJSDate(),
+        amount: 18000,
+        currency: 'won',
+        type: 'expense',
+        memo: '식사',
+    },
+    {
+        id: 97,
+        createAt: DateTime.local(2025, 10, 22).toJSDate(),
+        amount: 150000,
+        currency: 'won',
+        type: 'income',
+        memo: '보너스',
+    },
+    {
+        id: 98,
+        createAt: DateTime.local(2025, 10, 28).toJSDate(),
+        amount: 30000,
+        currency: 'won',
+        type: 'expense',
+        memo: '선물',
+    },
+
     {
         id: 0,
         createAt: DateTime.local(2025, 9, 12).toJSDate(),
@@ -103,7 +186,7 @@ export const transactions: TransactionT[] = [
     {
         id: 72,
         createAt: DateTime.local(2025, 9, 18).toJSDate(),
-        amount: 8000,
+        amount: 802300,
         currency: 'won',
         type: 'income',
         memo: '보너스',

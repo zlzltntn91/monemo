@@ -11,8 +11,8 @@ type ContextType = {
 
 const cellWidth = "14.28%" as DimensionValue;
 const cellHeight = "16.67%" as DimensionValue;
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height * 0.6;
+const width = '100%';
+const height = Dimensions.get('screen').height * 0.6;
 export const defaultContextValue = {width, height, cellWidth, cellHeight};
 
 const CalendarContext = createContext<ContextType>(defaultContextValue);

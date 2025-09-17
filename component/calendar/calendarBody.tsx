@@ -1,84 +1,78 @@
-import {StyleSheet, Text, View} from "react-native";
-import {MyCalendarT} from "@/src/calendar";
-import {createContext, useContext, useState} from "react";
-import CalendarContext from "@/component/calendar/calendarContext";
-import {TransactionT} from '@/constatns/types/types'
-import {DateTime} from 'luxon';
-import {transactions as initTransactions} from '@/constatns/transaction'
+import {Pressable, StyleSheet, Text, View} from "react-native";
+import {useContext} from "react";
+import CalendarContext from "@/component/calendar/context/calendarContext";
 import {Day} from "@/component/calendar/day";
+import {CalendarDataContext} from "./context/calendarDataContext";
+import {ModalContext} from "@/component/modal/transactionModal";
 
-export const CalendarDataContext = createContext<any>(null);
-
-export default function CalendarBody({item}: { item: MyCalendarT }) {
+export default function CalendarBody() {
     const _context = useContext(CalendarContext);
-    const [transactions, setTransactions] = useState<TransactionT[]>(initTransactions);
+    const context = useContext(CalendarDataContext);
+    const {item} = context;
+
+    function calculateCellHeight() {
+        let height = _context.cellHeight;
+        if ((item.day.length + item.startWeekOfFirstDay + (6 - item.startWeekOfEndDay)) !== 42) {
+            height = '20%';
+        }
+        return height;
+    }
+
+    const height = calculateCellHeight()
 
     return (
-        <CalendarDataContext.Provider value={{item, transactions}}>
-            <View style={[styles.container, {height: _context.height}]}
-                  onLayout={(e) => {
+        <View style={[styles.container, {height: _context.height}]}
+              onLayout={(e) => {
+              }}>
 
-                  }}>
-                {/*~ 시작요일 ~ 시작일*/}
-                {
-                    Array.from({length: item.startWeekOfFirstDay})
-                        .map((v, index) => {
-                                let height = _context.cellHeight;
-                                if ((item.day.length + item.startWeekOfFirstDay + (6 - item.startWeekOfEndDay)) != 42) {
-                                    height = '20%';
-                                }
-                                return (
-                                    <View key={index} style={[
-                                        styles.cellContainer, {width: _context.cellWidth, height: height}
-                                    ]}>
-                                        <Text
-                                            style={[styles.text, {width: _context.cellWidth, height: height}]}
-                                            key={`_${index}`}>
-                                        </Text>
-                                    </View>)
-                            }
-                        )
-                }
-                {/*시작일 ~ 마지막일*/}
-                {
-                    item.day.map((v, index) => {
-                            let height = _context.cellHeight;
-                            if ((item.day.length + item.startWeekOfFirstDay + (6 - item.startWeekOfEndDay)) != 42) {
-                                height = '20%';
-                            }
+            {/*~ 시작요일 ~ 시작일*/}
+            {
+                Array.from({length: item.startWeekOfFirstDay})
+                    .map((v, index) => {
                             return (
-                                <Day
-                                    day={v}
-                                    key={item.year + item.month + index}
-                                    style={{height: height}}
-                                ></Day>
-                            );
+                                <View key={index} style={[
+                                    styles.cellContainer, {width: _context.cellWidth, height: height}
+                                ]}>
+                                    <Text
+                                        style={[styles.text, {width: _context.cellWidth, height: height}]}
+                                        key={`_${index}`}>
+                                    </Text>
+                                </View>)
                         }
                     )
-                }
-
-                {/*마지막일 ~ 해당주 마지막 요일*/}
-                {
-                    Array.from({length: 6 - item.startWeekOfEndDay})
-                        .map((v, index) => {
-                                let height = _context.cellHeight;
-                                if ((item.day.length + item.startWeekOfFirstDay + (6 - item.startWeekOfEndDay)) != 42) {
-                                    height = '20%';
-                                }
-                                return (
-                                    <View key={index} style={[
-                                        styles.cellContainer, {width: _context.cellWidth, height: height}
-                                    ]}>
-                                        <Text
-                                            style={[styles.text, {width: _context.cellWidth, height: height}]}
-                                            key={`_${index}`}>
-                                        </Text>
-                                    </View>)
-                            }
-                        )
-                }
-            </View>
-        </CalendarDataContext.Provider>
+            }
+            {/*시작일 ~ 마지막일*/}
+            {
+                item.day.map((v: number, index: number) => {
+                        return (
+                            <Day
+                                key={index}
+                                day={v}
+                                style={{height: height}}
+                            ></Day>
+                        );
+                    }
+                )
+            }
+            {/*마지막일 ~ 해당주 마지막 요일*/
+            }
+            {
+                Array.from({length: 6 - item.startWeekOfEndDay})
+                    .map((v, index) => {
+                            return (
+                                <View key={index} style={[
+                                    styles.cellContainer, {width: _context.cellWidth, height: height}
+                                ]}>
+                                    <Text
+                                        style={[styles.text, {width: _context.cellWidth, height: height}]}
+                                        key={`_${index}`}>
+                                    </Text>
+                                </View>
+                            )
+                        }
+                    )
+            }
+        </View>
     )
 }
 
@@ -87,6 +81,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         // borderWidth: 10,
         flexWrap: "wrap",
+        borderLeftWidth: 0.2,
         // height: Dimensions.get('window').height * 0.6
     },
     cellContainer: {
