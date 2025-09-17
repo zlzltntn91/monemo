@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import Animated, {useSharedValue, withSequence, withTiming} from "react-native-reanimated";
+import Animated, {Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming} from "react-native-reanimated";
 import {Dimensions, DimensionValue, Modal, Pressable, Text, View} from "react-native";
 import MyTextInput from "@/component/ui/myTextInput";
 import MyCard from "@/component/ui/myCard";
@@ -45,8 +45,33 @@ function TransactionModal() {
         if (!modalContext.isVisible) {
             setAmount('');
             setMemo('');
+            setIsCalendarVisible(false);
+            setTransactionType('income');
         }
+
     }, [modalContext.isVisible]);
+
+    const opacity = useSharedValue(0);
+    const animatedHeight = useSharedValue(-10);
+
+    const calendarAnimatedStyles = useAnimatedStyle(() => {
+        return {
+            opacity: opacity.value,
+            transform: [{translateY: animatedHeight.value}],
+        }
+    });
+
+    useEffect(() => {
+        if (isCalendarVisible) {
+            animatedHeight.value = withSequence(
+                withTiming( 0, {duration: 500}),
+            );
+
+            opacity.value = withSequence(
+                withTiming(1, { duration: 800 }),
+            );
+        }
+    }, [isCalendarVisible]);
 
     return (
         <Modal
@@ -205,8 +230,19 @@ function TransactionModal() {
                             </Text>
                             <MyCard style={{width: 100, backgroundColor: '#E0E0E0', marginRight: 8, height: '90%'}}>
                                 <Pressable onPress={() => {
-                                    setIsCalendarVisible(!isCalendarVisible);
-                                    console.log('onPress');
+                                    if(!isCalendarVisible){
+                                        setIsCalendarVisible(true)
+                                        return;
+                                    }
+                                    opacity.value = withSequence(
+                                        withTiming((0), { duration: 800 }),
+                                    );
+                                    animatedHeight.value = withSequence(
+                                        withTiming((-10), {duration: 500}),
+                                    );
+                                    setTimeout(() => {
+                                        setIsCalendarVisible(!isCalendarVisible);
+                                    }, 450);
                                 }}>
                                     <Text
                                         style={{
@@ -228,7 +264,7 @@ function TransactionModal() {
                         }}>
                         </View>
                         {isCalendarVisible &&
-                            <View style={{height:400}}>
+                            <Animated.View style={[calendarAnimatedStyles, {height: 400}]}>
                                 <CalendarContext value={defaultValue}>
                                     <CalendarDataContext
                                         value={{item: MyCalendar.getCalendar(createAt), transactions: []}}>
@@ -240,7 +276,7 @@ function TransactionModal() {
                                         </CalendarBody>
                                     </CalendarDataContext>
                                 </CalendarContext>
-                            </View>
+                            </Animated.View>
                         }
                     </MyCard>
                     {/*일자 END*/}
