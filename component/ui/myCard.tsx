@@ -9,7 +9,7 @@ function MyCard(props: React.ComponentProps<typeof View>) {
             padding: 8,
             shadowRadius: 4,
             shadowColor: 'grey',
-            shadowOpacity: 0.2,
+            shadowOpacity: 0.1,
             shadowOffset: {width: 0, height: 2},
             elevation: 4
         }, props.style]}>

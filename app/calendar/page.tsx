@@ -1,32 +1,24 @@
 import MyView from "@/component/myView";
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming} from "react-native-reanimated";
 import {useCallback, useContext, useRef, useState} from "react";
-import {
-    FlatList,
-    GestureResponderEvent,
-    Text,
-    View,
-    useWindowDimensions,
-    Modal,
-    Pressable,
-    TextInput
-} from "react-native";
+import {FlatList, GestureResponderEvent, Text, View} from "react-native";
 import MyCalendar, {MyCalendarT} from "@/src/calendar";
 import {DateTime} from "luxon";
 import CalendarBody from "@/component/calendar/calendarBody";
 import CalendarContext from "@/component/calendar/context/calendarContext";
 import CalendarHeader from "@/component/calendar/calendarHeader";
-import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
-import {transactions} from "@/constatns/transaction";
+import {MaterialIcons} from "@expo/vector-icons";
+import {transactions as defaultTransactions} from "@/constatns/transaction";
 import {TransactionT} from "@/constatns/types/types";
 import TransactionRow from "@/component/transaction/transactionRow";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
-import TransactionModal, {ModalContext} from "@/component/modal/transactionModal";
+import TransactionEditModal from "@/component/transaction/modal/transactionEditModal";
+import ModalContext from "@/component/transaction/modal/modalContext";
+import TransactionContext from "@/component/transaction/transactionContext";
+import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
 
 const viewAbleConfig = {
-    // waitForInteraction: true,
     viewAreaCoveragePercentThreshold: 70,
-    // itemVisiblePercentThreshold: 60
 }
 
 function initData() {
@@ -46,7 +38,7 @@ export default function CalendarPage() {
     const [isScrolling, setScrolling] = useState(false);
     const [datas, setDatas] = useState(initData());
     const listRef = useRef<FlatList>(null);
-    const [_tr, setTr] = useState<TransactionT[]>(transactions);
+    const [transactions, setTransactions] = useState<TransactionT[]>(defaultTransactions);
     const [isVisible, setIsVisible] = useState(false);
 
     // 애니메이션 값 추가
@@ -54,7 +46,6 @@ export default function CalendarPage() {
     const titleTranslateY = useSharedValue(0);
     const transactionOpacity = useSharedValue(1);
     const transactionTranslateY = useSharedValue(0);
-
 
     // 제목 애니메이션 스타일
     const titleAnimatedStyle = useAnimatedStyle(() => {
@@ -85,13 +76,13 @@ export default function CalendarPage() {
 
             // 타이틀과 트랜잭션 설정
             setTitle(`${item.year}년 ${item.month}월`);
-            setTr(transactions.filter(_v => {
+            setTransactions(transactions.filter(_v => {
                 let year = _v.createAt.getFullYear();
                 let month = _v.createAt.getMonth() + 1;
                 if (item.year === year && item.month === month) {
                     return _v;
                 }
-            }))
+            }));
             listRef.current?.scrollToIndex({
                 index: info.viewableItems[0].index,
                 animated: true,
@@ -100,7 +91,6 @@ export default function CalendarPage() {
             });
         });
     }, []);
-    const modalRef = useRef<Modal>(null)
 
     const onPressHandler = (e: GestureResponderEvent) => {
         setDatas(initData());
@@ -119,80 +109,93 @@ export default function CalendarPage() {
     return (
         <MyView>
             <ModalContext.Provider
-                value={{isVisible, setIsVisible, amount, setAmount, memo, setMemo, createAt, setCreateAt}}>
-                <Animated.View>
-                    <View>
-                        <MaterialIcons name={'add'}></MaterialIcons>
-                    </View>
-                    <View style={titleAnimatedStyle}>
-                        <CalendarHeader title={title}
-                                        onTodayPress={onPressHandler}>
-                        </CalendarHeader>
-                    </View>
-                    <View style={{height: context.height, borderBottomWidth: 2}}>
-                        <Animated.FlatList
-                            getItemLayout={(_, index) => {
-                                return {length: context.height, offset: context.height * index, index};
-                            }}
-                            ref={listRef}
-                            initialScrollIndex={1}
-                            scrollEventThrottle={16}
-                            // extraData={isScrolling}
-                            keyExtractor={(item, index) => item.year + item.month + ''}
-                            scrollEnabled={true}
-                            showsHorizontalScrollIndicator={false}
-                            onScroll={(e) => {
-                                let scrollY = e.nativeEvent.contentOffset.y;
-                                let newIndex = Math.floor((scrollY * 1.5) / (context.height));
-                                if (viewableIndex.current !== newIndex) {
-                                    viewableIndex.current = newIndex;
-                                    listRef.current?.scrollToIndex({
-                                        index: viewableIndex.current < 0 ? 0 : viewableIndex.current > datas.length - 1 ? datas.length - 1 : viewableIndex.current,
-                                        animated: true,
-                                    });
+                value={{
+                    isVisible,
+                    setIsVisible,
+                    amount,
+                    setAmount,
+                    memo,
+                    setMemo,
+                    createAt,
+                    setCreateAt,
+                }}>
+                <TransactionContext.Provider value={{transactions, setTransactions}}>
+
+
+                    <Animated.View style={{flex: 1}}>
+                        <View>
+                            <MaterialIcons name={'add'}></MaterialIcons>
+                        </View>
+                        <View style={titleAnimatedStyle}>
+                            <CalendarHeader title={title}
+                                            onTodayPress={onPressHandler}>
+                            </CalendarHeader>
+                        </View>
+                        <View style={{height: context.height, borderBottomWidth: 2}}>
+                            <Animated.FlatList
+                                getItemLayout={(_, index) => {
+                                    return {length: context.height, offset: context.height * index, index};
+                                }}
+                                ref={listRef}
+                                initialScrollIndex={1}
+                                scrollEventThrottle={16}
+                                // extraData={isScrolling}
+                                keyExtractor={(item, index) => item.year + item.month + ''}
+                                scrollEnabled={true}
+                                showsHorizontalScrollIndicator={false}
+                                onScroll={(e) => {
+                                    let scrollY = e.nativeEvent.contentOffset.y;
+                                    let newIndex = Math.floor((scrollY * 1.5) / (context.height));
+                                    if (viewableIndex.current !== newIndex) {
+                                        viewableIndex.current = newIndex;
+                                        listRef.current?.scrollToIndex({
+                                            index: viewableIndex.current < 0 ? 0 : viewableIndex.current > datas.length - 1 ? datas.length - 1 : viewableIndex.current,
+                                            animated: true,
+                                        });
+                                    }
+                                }}
+                                viewabilityConfig={viewAbleConfig}
+                                onViewableItemsChanged={handleViewableItemsChanged}
+                                data={datas}
+                                renderItem={({item}) => {
+                                    return <>
+                                        <CalendarDataContext.Provider value={{item, transactions}}>
+                                            {isScrolling &&
+                                                <Text style={{
+                                                    position: 'absolute',
+                                                    top: -25,
+                                                    fontWeight: 'bold',
+                                                    fontSize: 32,
+                                                    zIndex: 200
+                                                }}>
+                                                    {`${item.year}년 ${item.month}월`}
+                                                </Text>
+                                            }
+                                            <CalendarBody/>
+                                        </CalendarDataContext.Provider>
+                                    </>
+                                }}
+                            >
+                            </Animated.FlatList>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <Animated.ScrollView
+                                showsVerticalScrollIndicator={false}
+                                style={[transactionAnimatedStyle]}
+                                contentContainerStyle={{marginTop: 4, gap: 4, flex: 1}}>
+                                {
+                                    [...transactions].sort((v, v2) => {
+                                        return v.createAt.getTime() - v2.createAt.getTime();
+                                    }).map((item, index) => {
+                                        return <TransactionRow key={index} transaction={item}></TransactionRow>
+                                    })
                                 }
-                            }}
-                            viewabilityConfig={viewAbleConfig}
-                            onViewableItemsChanged={handleViewableItemsChanged}
-                            data={datas}
-                            renderItem={({item}) => {
-                                return <>
-                                    <CalendarDataContext.Provider value={{item, transactions}}>
-                                        {isScrolling &&
-                                            <Text style={{
-                                                position: 'absolute',
-                                                top: -25,
-                                                fontWeight: 'bold',
-                                                fontSize: 32,
-                                                zIndex: 200
-                                            }}>
-                                                {`${item.year}년 ${item.month}월`}
-                                            </Text>
-                                        }
-                                        <CalendarBody/>
-                                    </CalendarDataContext.Provider>
-                                </>
-                            }}
-                        >
-                        </Animated.FlatList>
-                    </View>
-                    {/*<View>*/}
-                    <Animated.ScrollView
-                        showsVerticalScrollIndicator={false}
-                        style={transactionAnimatedStyle}
-                        contentContainerStyle={{marginTop: 4, gap: 4}}>
-                        {
-                            _tr.sort((v, v2) => {
-                                return v.createAt.getTime() - v2.createAt.getTime();
-                            }).map((item, index) => {
-                                return <TransactionRow key={index} transaction={item}></TransactionRow>
-                            })
-                        }
-                    </Animated.ScrollView>
-                </Animated.View>
-                <TransactionModal></TransactionModal>
+                            </Animated.ScrollView>
+                        </View>
+                    </Animated.View>
+                    <TransactionEditModal></TransactionEditModal>
+                </TransactionContext.Provider>
             </ModalContext.Provider>
-            {/*</View>*/}
         </MyView>
     );
 }

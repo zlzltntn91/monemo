@@ -11,7 +11,6 @@ export default function CalendarHeader({title, onTodayPress}: {
     const context = useContext(CalendarContext)
     const days = ["일", "월", "화", "수", "목", "금", "토"];
 
-
     return (<View style={{
             flexDirection: 'column',
             width: context.width,

@@ -3,7 +3,6 @@ import {useContext} from "react";
 import CalendarContext from "@/component/calendar/context/calendarContext";
 import {Day} from "@/component/calendar/day";
 import {CalendarDataContext} from "./context/calendarDataContext";
-import {ModalContext} from "@/component/modal/transactionModal";
 
 export default function CalendarBody() {
     const _context = useContext(CalendarContext);

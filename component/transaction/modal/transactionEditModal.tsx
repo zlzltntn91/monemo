@@ -1,31 +1,17 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import Animated, {Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming} from "react-native-reanimated";
-import {Dimensions, DimensionValue, Modal, Pressable, Text, View} from "react-native";
+import React, {useContext, useEffect, useState} from 'react';
+import Animated, {useAnimatedStyle, useSharedValue, withSequence, withTiming} from "react-native-reanimated";
+import {DimensionValue, KeyboardAvoidingView, Modal, Platform, Pressable, Text, View} from "react-native";
 import MyTextInput from "@/component/ui/myTextInput";
 import MyCard from "@/component/ui/myCard";
-import {DateTime} from "luxon";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
-import {transactions} from "@/constatns/transaction";
 import CalendarBody from "@/component/calendar/calendarBody";
 import MyCalendar from "@/src/calendar";
 import CalendarHeader from "@/component/calendar/calendarHeader";
 import CalendarContext from "@/component/calendar/context/calendarContext";
-
-export const ModalContext = createContext({
-    isVisible: false,
-    setIsVisible: (v: boolean) => {
-    },
-    amount: '',
-    setAmount: (v: string) => {
-    },
-    memo: '',
-    setMemo: (v: string) => {
-    },
-    createAt: DateTime.local(),
-    setCreateAt: (v: DateTime) => {
-    },
-});
-
+import ModalContext from "@/component/transaction/modal/modalContext";
+import {DateTime} from "luxon";
+import TransactionContext from "@/component/transaction/transactionContext";
+import {TransactionT} from "@/constatns/types/types";
 
 const cellWidth = "14.28%" as DimensionValue;
 const cellHeight = "16.67%" as DimensionValue;
@@ -34,26 +20,16 @@ const height = '80%';
 
 const defaultValue = {cellWidth, cellHeight, width, height};
 
-function TransactionModal() {
+function TransactionEditModal() {
+
     const modalContext = useContext(ModalContext);
     const {amount, setAmount, memo, setMemo, createAt, setCreateAt} = modalContext;
+    const {transactions, setTransactions} = useContext(TransactionContext);
     const viewScale = useSharedValue(1);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const [transactionType, setTransactionType] = useState<'income' | 'expense'>('income');
-
-    useEffect(() => {
-        if (!modalContext.isVisible) {
-            setAmount('');
-            setMemo('');
-            setIsCalendarVisible(false);
-            setTransactionType('income');
-        }
-
-    }, [modalContext.isVisible]);
-
     const opacity = useSharedValue(0);
     const animatedHeight = useSharedValue(-10);
-
     const calendarAnimatedStyles = useAnimatedStyle(() => {
         return {
             opacity: opacity.value,
@@ -61,17 +37,69 @@ function TransactionModal() {
         }
     });
 
+    // 모달 닫히면 초기화
     useEffect(() => {
-        if (isCalendarVisible) {
+        if (!modalContext.isVisible) {
+            setAmount('');
+            setMemo('');
+            setIsCalendarVisible(false);
+            setTransactionType('income');
+        }
+    }, [modalContext.isVisible, setAmount, setMemo]);
+
+    // 캘린더 애니메이션 함수 추출
+    const animateCalendar = (show: boolean) => {
+        if (show) {
+            // 캘린더 표시 애니메이션
             animatedHeight.value = withSequence(
                 withTiming(0, {duration: 500}),
             );
-
             opacity.value = withSequence(
                 withTiming(1, {duration: 800}),
             );
+        } else {
+            // 캘린더 숨김 애니메이션
+            opacity.value = withSequence(
+                withTiming(0, {duration: 500}),
+            );
+            animatedHeight.value = withSequence(
+                withTiming(-10, {duration: 400}),
+            );
+            // 애니메이션 완료 후 상태 업데이트
+            setTimeout(() => {
+                setIsCalendarVisible(false);
+            }, 200);
+        }
+    };
+
+    // 트랜잭션
+    const onPressSave = () => {
+        setTransactions((prev) => {
+            const newTransaction: TransactionT = {
+                id: Math.random(),
+                amount: Number(amount),
+                memo: memo,
+                currency: 'won',
+                type: transactionType,
+                createAt: createAt.toJSDate(),
+            }
+            return [...prev, newTransaction];
+        });
+        modalContext.setIsVisible(false);
+    }
+
+    useEffect(() => {
+        console.log('transactions changed');
+    }, [transactions]);
+    // 트랜잭션 END
+
+    // 모달 내 달력
+    useEffect(() => {
+        if (isCalendarVisible) {
+            animateCalendar(true);
         }
     }, [isCalendarVisible]);
+    // 모달 내 달력 END
 
     return (
         <Modal
@@ -125,9 +153,7 @@ function TransactionModal() {
 
                             <Text style={{color: 'red', fontWeight: 500, fontSize: 16}}>닫기</Text>
                         </Pressable>
-                        <Pressable onPress={() => {
-                            modalContext.setIsVisible(false);
-                        }}
+                        <Pressable onPress={onPressSave}
                                    style={{
                                        alignSelf: 'flex-end',
                                        paddingTop: 4,
@@ -200,7 +226,7 @@ function TransactionModal() {
                         {/*메모*/}
                         <MyTextInput
                             multiline={true}
-                            numberOfLines={3}
+                            numberOfLines={10}
                             maxLength={100}
                             value={memo}
                             onChangeText={setMemo}
@@ -209,7 +235,6 @@ function TransactionModal() {
                             style={{
                                 flex: 1,
                                 fontSize: 16,
-                                height: 'auto',
                                 textAlign: 'left'
                             }}
                         ></MyTextInput>
@@ -231,18 +256,10 @@ function TransactionModal() {
                             <MyCard style={{width: 100, backgroundColor: '#E0E0E0', marginRight: 8, height: '90%'}}>
                                 <Pressable onPress={() => {
                                     if (!isCalendarVisible) {
-                                        setIsCalendarVisible(true)
+                                        setIsCalendarVisible(true);
                                         return;
                                     }
-                                    opacity.value = withSequence(
-                                        withTiming((0), {duration: 500}),
-                                    );
-                                    animatedHeight.value = withSequence(
-                                        withTiming((-10), {duration: 400}),
-                                    );
-                                    setTimeout(() => {
-                                        setIsCalendarVisible(!isCalendarVisible);
-                                    }, 300);
+                                    animateCalendar(false);
                                 }}>
                                     <Text
                                         style={{
@@ -265,7 +282,15 @@ function TransactionModal() {
                         </View>
                         {isCalendarVisible &&
                             <Animated.View style={[calendarAnimatedStyles, {height: 400}]}>
-                                <CalendarContext value={defaultValue}>
+                                <CalendarContext value={{
+                                    ...defaultValue,
+                                    onPressDay: (dateTime: DateTime) => {
+                                        setCreateAt(dateTime);
+                                        animateCalendar(false);
+                                    },
+                                    isVisible: isCalendarVisible,
+                                    setIsVisible: setIsCalendarVisible,
+                                }}>
                                     <CalendarDataContext
                                         value={{item: MyCalendar.getCalendar(createAt), transactions: []}}>
                                         <CalendarHeader title={`${createAt.year}년 ${createAt.month}월`}
@@ -280,11 +305,10 @@ function TransactionModal() {
                         }
                     </MyCard>
                     {/*일자 END*/}
-
                 </View>
             </View>
         </Modal>
     );
 }
 
-export default TransactionModal;
+export default TransactionEditModal;

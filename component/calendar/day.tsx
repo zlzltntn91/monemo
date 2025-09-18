@@ -6,7 +6,9 @@ import {Pressable, StyleSheet, Text, View} from "react-native";
 import Transaction from "@/component/transaction/transaction";
 import {DateTime} from "luxon";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
-import {ModalContext} from "@/component/modal/transactionModal";
+import ModalContext from "@/component/transaction/modal/modalContext";
+import calendarContext from "@/component/calendar/context/calendarContext";
+import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
 
 type Props = {
     style?: any,
@@ -14,39 +16,45 @@ type Props = {
     day: number,
 };
 export const Day = (props: Props) => {
-    const currentDay = DateTime.local();
-    const context = useContext(CalendarDataContext);
-    const modalContext = useContext(ModalContext);
-    const item = context.item;
-    const day = props.day;
-    const transactions: TransactionT[] = context.transactions;
-    const [visibleCounts, setVisibleCounts] = useState<number>(1);
-    const currentDateTransactions: TransactionT[] = transactions.filter(_v => {
-        if (_v.createAt.getTime() === DateTime.local(item.year, item.month, day).toJSDate().getTime()) {
-            return _v;
-        }
-    })
+        const currentDay = DateTime.local();
+        const calendarContext = useContext(CalendarContext);
+        const dataContext = useContext(CalendarDataContext);
+        const modalContext = useContext(ModalContext);
+        const item = dataContext.item;
+        const day = props.day;
+        const transactions: TransactionT[] = dataContext.transactions;
+        const [visibleCounts, setVisibleCounts] = useState<number>(1);
+        const currentDateTransactions: TransactionT[] = transactions.filter(_v => {
+            if (_v.createAt.getTime() === DateTime.local(item.year, item.month, day).toJSDate().getTime()) {
+                return _v;
+            }
+        })
+        const [transactionDetailVisible, setTransactionDetailVisible] = useState(false);
 
-    const _context = useContext(CalendarContext);
-    const [containerHeight, setContainerHeight] = useState(0);
-    const [childrenTotalHeight, setChildrenTotalHeight] = useState(0);
+        const _context = useContext(CalendarContext);
+        const [containerHeight, setContainerHeight] = useState(0);
+        const [childrenTotalHeight, setChildrenTotalHeight] = useState(0);
 
-    useEffect(() => {
-        if (containerHeight === 0) {
-            return;
-        }
-        setVisibleCounts(Math.floor((containerHeight - childrenTotalHeight - 20) / 20));
-    }, [containerHeight, childrenTotalHeight]);
+        useEffect(() => {
+            if (containerHeight === 0) {
+                return;
+            }
+            setVisibleCounts(Math.floor((containerHeight - childrenTotalHeight - 20) / 20));
+        }, [containerHeight, childrenTotalHeight]);
 
-    let today = currentDay.toISODate() === DateTime.local(item.year, item.month, day).toISODate();
-    return (
+        let today = currentDay.toISODate() === DateTime.local(item.year, item.month, day).toISODate();
+        return (
             <Pressable
                 onLongPress={(e) => {
                     modalContext.setIsVisible(true);
                     modalContext.setCreateAt(DateTime.local(item.year, item.month, day));
                     console.log('onLongPress');
                 }}
-                onPressIn={() => {
+                onPressIn={(e) => {
+                    if (calendarContext.onPressDay) {
+                        calendarContext.onPressDay(DateTime.local(item.year, item.month, day));
+                        return;
+                    }
                     console.log('onPressIn');
                 }}
                 onPressOut={() => {
@@ -99,11 +107,27 @@ export const Day = (props: Props) => {
                 {
                     currentDateTransactions && currentDateTransactions.slice(0, visibleCounts).map((_v, index) => {
                         return (
-                            <Transaction
-                                key={_v.id}
-                                transaction={_v}
-                            >
-                            </Transaction>);
+                            <Pressable key={_v.id}
+                                       onPress={() => {
+                                           setTransactionDetailVisible(true);
+                                       }}>
+                                <Transaction
+                                    transaction={_v}
+                                >
+                                </Transaction>
+                                <ModalContext.Provider value={{
+                                    isVisible: transactionDetailVisible,
+                                    setIsVisible: setTransactionDetailVisible,
+                                    createAt: _v.createAt,
+                                    id: _v.id,
+                                    type: _v.type,
+                                    amount: _v.amount,
+                                    memo: _v.memo,
+                                }}>
+                                    <TransactionDetailModal></TransactionDetailModal>
+                                </ModalContext.Provider>
+                            </Pressable>)
+                            ;
                     })
                 }
                 {
@@ -116,8 +140,10 @@ export const Day = (props: Props) => {
                     )
                 }
             </Pressable>
-    );
-};
+        )
+            ;
+    }
+;
 
 const styles = StyleSheet.create({
     cellContainer: {
