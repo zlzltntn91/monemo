@@ -12,10 +12,7 @@ import {transactions as defaultTransactions} from "@/constatns/transaction";
 import {TransactionT} from "@/constatns/types/types";
 import TransactionRow from "@/component/transaction/transactionRow";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
-import TransactionEditModal from "@/component/transaction/modal/transactionEditModal";
-import ModalContext from "@/component/transaction/modal/modalContext";
-import TransactionContext from "@/component/transaction/transactionContext";
-import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
+import TransactionsContext from "@/component/transaction/transactionsContext";
 
 const viewAbleConfig = {
     viewAreaCoveragePercentThreshold: 70,
@@ -39,7 +36,6 @@ export default function CalendarPage() {
     const [datas, setDatas] = useState(initData());
     const listRef = useRef<FlatList>(null);
     const [transactions, setTransactions] = useState<TransactionT[]>(defaultTransactions);
-    const [isVisible, setIsVisible] = useState(false);
 
     // 애니메이션 값 추가
     const titleOpacity = useSharedValue(1);
@@ -77,8 +73,8 @@ export default function CalendarPage() {
             // 타이틀과 트랜잭션 설정
             setTitle(`${item.year}년 ${item.month}월`);
             setTransactions(transactions.filter(_v => {
-                let year = _v.createAt.getFullYear();
-                let month = _v.createAt.getMonth() + 1;
+                let year = _v.createAt.year;
+                let month = _v.createAt.month;
                 if (item.year === year && item.month === month) {
                     return _v;
                 }
@@ -102,100 +98,83 @@ export default function CalendarPage() {
         })
     }
 
-    const [amount, setAmount] = useState<string>('');
-    const [memo, setMemo] = useState<string>('');
-    const [createAt, setCreateAt] = useState<DateTime>(DateTime.local());
 
     return (
         <MyView>
-            <ModalContext.Provider
-                value={{
-                    isVisible,
-                    setIsVisible,
-                    amount,
-                    setAmount,
-                    memo,
-                    setMemo,
-                    createAt,
-                    setCreateAt,
-                }}>
-                <TransactionContext.Provider value={{transactions, setTransactions}}>
-
-
-                    <Animated.View style={{flex: 1}}>
-                        <View>
-                            <MaterialIcons name={'add'}></MaterialIcons>
-                        </View>
-                        <View style={titleAnimatedStyle}>
-                            <CalendarHeader title={title}
-                                            onTodayPress={onPressHandler}>
-                            </CalendarHeader>
-                        </View>
-                        <View style={{height: context.height, borderBottomWidth: 2}}>
-                            <Animated.FlatList
-                                getItemLayout={(_, index) => {
-                                    return {length: context.height, offset: context.height * index, index};
-                                }}
-                                ref={listRef}
-                                initialScrollIndex={1}
-                                scrollEventThrottle={16}
-                                // extraData={isScrolling}
-                                keyExtractor={(item, index) => item.year + item.month + ''}
-                                scrollEnabled={true}
-                                showsHorizontalScrollIndicator={false}
-                                onScroll={(e) => {
-                                    let scrollY = e.nativeEvent.contentOffset.y;
-                                    let newIndex = Math.floor((scrollY * 1.5) / (context.height));
-                                    if (viewableIndex.current !== newIndex) {
-                                        viewableIndex.current = newIndex;
-                                        listRef.current?.scrollToIndex({
-                                            index: viewableIndex.current < 0 ? 0 : viewableIndex.current > datas.length - 1 ? datas.length - 1 : viewableIndex.current,
-                                            animated: true,
-                                        });
-                                    }
-                                }}
-                                viewabilityConfig={viewAbleConfig}
-                                onViewableItemsChanged={handleViewableItemsChanged}
-                                data={datas}
-                                renderItem={({item}) => {
-                                    return <>
-                                        <CalendarDataContext.Provider value={{item, transactions}}>
-                                            {isScrolling &&
-                                                <Text style={{
-                                                    position: 'absolute',
-                                                    top: -25,
-                                                    fontWeight: 'bold',
-                                                    fontSize: 32,
-                                                    zIndex: 200
-                                                }}>
-                                                    {`${item.year}년 ${item.month}월`}
-                                                </Text>
-                                            }
-                                            <CalendarBody/>
-                                        </CalendarDataContext.Provider>
-                                    </>
-                                }}
-                            >
-                            </Animated.FlatList>
-                        </View>
-                        <View style={{flex: 1}}>
-                            <Animated.ScrollView
-                                showsVerticalScrollIndicator={false}
-                                style={[transactionAnimatedStyle]}
-                                contentContainerStyle={{marginTop: 4, gap: 4, flex: 1}}>
-                                {
-                                    [...transactions].sort((v, v2) => {
-                                        return v.createAt.getTime() - v2.createAt.getTime();
-                                    }).map((item, index) => {
-                                        return <TransactionRow key={index} transaction={item}></TransactionRow>
-                                    })
+            <TransactionsContext.Provider value={{transactions, setTransactions}}>
+                <Animated.View style={{flex: 1}}>
+                    <View>
+                        <MaterialIcons name={'add'}></MaterialIcons>
+                    </View>
+                    <View style={titleAnimatedStyle}>
+                        <CalendarHeader title={title}
+                                        onTodayPress={onPressHandler}>
+                        </CalendarHeader>
+                    </View>
+                    <View style={{height: context.height, borderBottomWidth: 2}}>
+                        <Animated.FlatList
+                            getItemLayout={(_, index) => {
+                                return {length: context.height, offset: context.height * index, index};
+                            }}
+                            ref={listRef}
+                            initialScrollIndex={1}
+                            scrollEventThrottle={16}
+                            // extraData={isScrolling}
+                            keyExtractor={(item, index) => item.year + item.month + ''}
+                            scrollEnabled={true}
+                            showsHorizontalScrollIndicator={false}
+                            onScroll={(e) => {
+                                let scrollY = e.nativeEvent.contentOffset.y;
+                                let newIndex = Math.floor((scrollY * 1.5) / (context.height));
+                                if (viewableIndex.current !== newIndex) {
+                                    viewableIndex.current = newIndex;
+                                    listRef.current?.scrollToIndex({
+                                        index: viewableIndex.current < 0 ? 0 : viewableIndex.current > datas.length - 1 ? datas.length - 1 : viewableIndex.current,
+                                        animated: true,
+                                    });
                                 }
-                            </Animated.ScrollView>
-                        </View>
-                    </Animated.View>
-                    <TransactionEditModal></TransactionEditModal>
-                </TransactionContext.Provider>
-            </ModalContext.Provider>
+                            }}
+                            viewabilityConfig={viewAbleConfig}
+                            onViewableItemsChanged={handleViewableItemsChanged}
+                            data={datas}
+                            renderItem={({item}) => {
+                                return <>
+                                    <CalendarDataContext.Provider value={{item, transactions}}>
+                                        {isScrolling &&
+                                            <Text style={{
+                                                position: 'absolute',
+                                                top: -25,
+                                                fontWeight: 'bold',
+                                                fontSize: 32,
+                                                zIndex: 200
+                                            }}>
+                                                {`${item.year}년 ${item.month}월`}
+                                            </Text>
+                                        }
+                                        <CalendarBody/>
+                                    </CalendarDataContext.Provider>
+                                </>
+                            }}
+                        >
+                        </Animated.FlatList>
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Animated.ScrollView
+                            showsVerticalScrollIndicator={false}
+                            style={[transactionAnimatedStyle]}
+                            contentContainerStyle={{marginTop: 4, gap: 4, flex: 1}}>
+                            {
+                                [...transactions].sort((v, v2) => {
+                                    return v.createAt.toMillis() - v2.createAt.toMillis();
+                                }).map((item, index) => {
+                                    return <TransactionRow key={index} transaction={item}></TransactionRow>
+                                })
+                            }
+                        </Animated.ScrollView>
+                    </View>
+                </Animated.View>
+
+            </TransactionsContext.Provider>
         </MyView>
     );
 }

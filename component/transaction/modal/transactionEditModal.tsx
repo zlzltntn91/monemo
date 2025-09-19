@@ -10,8 +10,9 @@ import CalendarHeader from "@/component/calendar/calendarHeader";
 import CalendarContext from "@/component/calendar/context/calendarContext";
 import ModalContext from "@/component/transaction/modal/modalContext";
 import {DateTime} from "luxon";
-import TransactionContext from "@/component/transaction/transactionContext";
+import TransactionsContext from "@/component/transaction/transactionsContext";
 import {TransactionT} from "@/constatns/types/types";
+import TransactionContext from "@/component/transaction/transactionContext";
 
 const cellWidth = "14.28%" as DimensionValue;
 const cellHeight = "16.67%" as DimensionValue;
@@ -20,11 +21,20 @@ const height = '80%';
 
 const defaultValue = {cellWidth, cellHeight, width, height};
 
-function TransactionEditModal() {
+function TransactionEditModal({at}: { at: DateTime }) {
+
+    const [id, setId] = useState<number>(0);
+    const [type, setType] = useState<'income' | 'expense'>('income');
+    const [currency, setCurrency] = useState<'usd' | 'won'>('won');
+    const [amount, setAmount] = useState<number>(0);
+    const [memo, setMemo] = useState<string>('');
+    const [createAt, setCreateAt] = useState<DateTime>(at);
 
     const modalContext = useContext(ModalContext);
-    const {amount, setAmount, memo, setMemo, createAt, setCreateAt} = modalContext;
-    const {transactions, setTransactions} = useContext(TransactionContext);
+    const {isVisible, setIsVisible} = modalContext;
+    const {transactions, setTransactions} = useContext(TransactionsContext);
+    const transactionContext = useContext(TransactionContext);
+
     const viewScale = useSharedValue(1);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const [transactionType, setTransactionType] = useState<'income' | 'expense'>('income');
@@ -39,13 +49,13 @@ function TransactionEditModal() {
 
     // 모달 닫히면 초기화
     useEffect(() => {
-        if (!modalContext.isVisible) {
-            setAmount('');
-            setMemo('');
+        if (!isVisible) {
+            setAmount!(0);
+            setMemo!('');
             setIsCalendarVisible(false);
             setTransactionType('income');
         }
-    }, [modalContext.isVisible, setAmount, setMemo]);
+    }, [isVisible, setAmount, setMemo]);
 
     // 캘린더 애니메이션 함수 추출
     const animateCalendar = (show: boolean) => {
@@ -81,7 +91,7 @@ function TransactionEditModal() {
                 memo: memo,
                 currency: 'won',
                 type: transactionType,
-                createAt: createAt.toJSDate(),
+                createAt: createAt,
             }
             return [...prev, newTransaction];
         });
@@ -112,7 +122,7 @@ function TransactionEditModal() {
                 );
             }}
             // visible={true}
-            visible={modalContext.isVisible}
+            visible={isVisible}
             animationType="slide"
             transparent={true}
             statusBarTranslucent={false}
@@ -217,7 +227,7 @@ function TransactionEditModal() {
                                      value={amount ? Number(amount).toLocaleString() : undefined}
                                      onChange={(e) => {
                                          const _amount = e.nativeEvent.text.replace(/[^0-9]/g, '');
-                                         setAmount(_amount);
+                                         setAmount!(Number(_amount));
                                      }}
                                      keyboardType={'number-pad'}
                                      placeholder={'금액'}
@@ -265,7 +275,7 @@ function TransactionEditModal() {
                                         style={{
                                             textAlign: 'center',
                                         }}
-                                    >{modalContext.createAt.toFormat('yyyy.MM.dd')}
+                                    >{createAt.toFormat('yyyy.MM.dd')}
                                     </Text>
                                 </Pressable>
 
@@ -285,7 +295,7 @@ function TransactionEditModal() {
                                 <CalendarContext value={{
                                     ...defaultValue,
                                     onPressDay: (dateTime: DateTime) => {
-                                        setCreateAt(dateTime);
+                                        setCreateAt!(dateTime);
                                         animateCalendar(false);
                                     },
                                     isVisible: isCalendarVisible,

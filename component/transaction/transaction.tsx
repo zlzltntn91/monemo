@@ -4,6 +4,7 @@ import {LayoutChangeEvent, Text, View} from "react-native";
 import CalendarContext from "@/component/calendar/context/calendarContext";
 import {TransactionT} from '@/constatns/types/types'
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {COLORS} from "@/constatns/color";
 
 type Props = {
     transaction: TransactionT
@@ -18,7 +19,7 @@ function Transaction(props: Props) {
     }, []);
     return (
         <View style={{
-            backgroundColor: transaction.type !== 'income' ? '#BBDEFB' : '#FFCDD2',
+            backgroundColor: transaction.type === 'income' ? COLORS.INCOME : COLORS.EXPENSE,
             flexDirection: 'row',
             marginLeft: 4,
             marginRight: 4,
@@ -32,13 +33,13 @@ function Transaction(props: Props) {
                 <MaterialCommunityIcons name={'chevron-up'}
                                         style={{paddingLeft: 4}}
                                         size={fontSize + 4}
-                                        color={'red'}
+                                        color={COLORS.INCOME_BOLD}
                 ></MaterialCommunityIcons>
                 :
                 <MaterialCommunityIcons name={'chevron-down'}
                                         style={{paddingLeft: 4}}
                                         size={fontSize + 4}
-                                        color={'blue'}
+                                        color={COLORS.EXPENSE_BOLD}
                 ></MaterialCommunityIcons>
             }
             <Text style={{

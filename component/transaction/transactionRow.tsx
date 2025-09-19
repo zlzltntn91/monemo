@@ -1,21 +1,21 @@
-import React, {useContext} from 'react';
-import {Alert, LayoutAnimation, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Alert, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
 import {TransactionT} from '@/constatns/types/types';
 import MyCard from '@/component/ui/myCard';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import TransactionContext from '@/component/transaction/transactionContext';
 
-// 컬러 상수 정의
-const COLORS = {
-    INCOME: '#BBDEFB',
-    EXPENSE: '#FFCDD2',
-    BORDER: '#E0E0E0',
-    DELETE: '#f82c2c',
-    TEXT_SECONDARY: 'grey',
-};
+import TransactionsContext from "@/component/transaction/transactionsContext";
+import {DateTime} from "luxon";
+import Separator from "@/component/transaction/separator";
+import {COLORS} from "@/constatns/color";
+import TransactionContext from "@/component/transaction/transactionContext";
+import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
+import ModalContext from "@/component/transaction/modal/modalContext";
+
 
 const TransactionRow = ({transaction}: { transaction: TransactionT }) => {
-    const {transactions, setTransactions} = useContext(TransactionContext);
+    const {transactions, setTransactions} = useContext(TransactionsContext);
+    const [transactionDetailVisible, setTransactionDetailVisible] = useState(false);
 
     // 거래 삭제 함수
     const handleDeleteTransaction = () => {
@@ -43,19 +43,10 @@ const TransactionRow = ({transaction}: { transaction: TransactionT }) => {
     };
 
     // 날짜 포맷 함수
-    const formatDate = (date: Date) => {
-        return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const formatDate = (date: DateTime) => {
+        return `${date.month}월 ${date.day}일`;
     };
 
-    // 구분선 컴포넌트
-    const Separator = () => (
-        <View
-            style={[
-                styles.separator,
-                {borderColor: transaction.type === 'income' ? COLORS.INCOME : COLORS.EXPENSE}
-            ]}
-        />
-    );
 
     // 거래 정보 컴포넌트
     const TransactionInfo = () => (
@@ -94,14 +85,27 @@ const TransactionRow = ({transaction}: { transaction: TransactionT }) => {
     return (
         <View style={styles.container}>
             <MyCard style={styles.card}>
-                <View style={styles.rowContainer}>
-                    <Separator/>
-                    <TransactionInfo/>
-                    <DeleteButton/>
-                </View>
+                <Pressable onPress={() => {
+                    setTransactionDetailVisible(true);
+                }}>
+                    <View style={styles.rowContainer}>
+                        <Separator type={transaction.type}/>
+                        <TransactionInfo/>
+                        <DeleteButton/>
+                    </View>
+                </Pressable>
             </MyCard>
+            <ModalContext.Provider value={{
+                isVisible: transactionDetailVisible,
+                setIsVisible: setTransactionDetailVisible
+            }}>
+                <TransactionContext.Provider value={transaction}>
+                    <TransactionDetailModal></TransactionDetailModal>
+                </TransactionContext.Provider>
+            </ModalContext.Provider>
         </View>
-    );
+    )
+        ;
 };
 
 const styles = StyleSheet.create({
@@ -117,11 +121,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    separator: {
-        flex: 0.02,
-        height: '100%',
-        borderLeftWidth: 8,
-    },
+
     infoContainer: {
         justifyContent: 'center',
         paddingLeft: 4,

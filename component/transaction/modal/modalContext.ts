@@ -1,30 +1,14 @@
-import {createContext} from 'react';
-import {DateTime} from 'luxon';
+import React, {createContext} from 'react';
 
 interface ModalContextType {
-    amount: string,
-    setAmount: (v: string) => void,
-    memo: string;
-    setMemo: (v: string) => void,
     isVisible: boolean;
-    setIsVisible: (v: boolean) => void;
-    createAt: DateTime;
-    setCreateAt: (date: DateTime) => void;
+    setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ModalContext = createContext<ModalContextType>({
-    amount: '',
-    setAmount: (v) => {
-    },
-    memo: '',
-    setMemo: (v) => {
-    },
-    createAt: DateTime.local(),
-    setCreateAt: (v) => {
-    },
     isVisible: false,
     setIsVisible: (v) => {
-    },
+    }
 });
 
 export default ModalContext;

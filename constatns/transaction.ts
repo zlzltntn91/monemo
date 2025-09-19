@@ -5,7 +5,7 @@ export const transactions: TransactionT[] = [
     // August 2025 transactions
     {
         id: 89,
-        createAt: DateTime.local(2025, 8, 5).toJSDate(),
+        createAt: DateTime.local(2025, 8, 5),
         amount: 15000,
         currency: 'won',
         type: 'expense',
@@ -13,7 +13,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 90,
-        createAt: DateTime.local(2025, 8, 10).toJSDate(),
+        createAt: DateTime.local(2025, 8, 10),
         amount: 50000,
         currency: 'won',
         type: 'income',
@@ -21,7 +21,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 91,
-        createAt: DateTime.local(2025, 8, 15).toJSDate(),
+        createAt: DateTime.local(2025, 8, 15),
         amount: 8000,
         currency: 'won',
         type: 'expense',
@@ -29,7 +29,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 92,
-        createAt: DateTime.local(2025, 8, 20).toJSDate(),
+        createAt: DateTime.local(2025, 8, 20),
         amount: 100000,
         currency: 'won',
         type: 'income',
@@ -37,7 +37,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 93,
-        createAt: DateTime.local(2025, 8, 25).toJSDate(),
+        createAt: DateTime.local(2025, 8, 25),
         amount: 12000,
         currency: 'won',
         type: 'expense',
@@ -46,7 +46,7 @@ export const transactions: TransactionT[] = [
     // October 2025 transactions
     {
         id: 94,
-        createAt: DateTime.local(2025, 10, 3).toJSDate(),
+        createAt: DateTime.local(2025, 10, 3),
         amount: 25000,
         currency: 'won',
         type: 'expense',
@@ -54,7 +54,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 95,
-        createAt: DateTime.local(2025, 10, 8).toJSDate(),
+        createAt: DateTime.local(2025, 10, 8),
         amount: 75000,
         currency: 'won',
         type: 'income',
@@ -62,7 +62,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 96,
-        createAt: DateTime.local(2025, 10, 15).toJSDate(),
+        createAt: DateTime.local(2025, 10, 15),
         amount: 18000,
         currency: 'won',
         type: 'expense',
@@ -70,7 +70,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 97,
-        createAt: DateTime.local(2025, 10, 22).toJSDate(),
+        createAt: DateTime.local(2025, 10, 22),
         amount: 150000,
         currency: 'won',
         type: 'income',
@@ -78,7 +78,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 98,
-        createAt: DateTime.local(2025, 10, 28).toJSDate(),
+        createAt: DateTime.local(2025, 10, 28),
         amount: 30000,
         currency: 'won',
         type: 'expense',
@@ -87,7 +87,7 @@ export const transactions: TransactionT[] = [
 
     {
         id: 0,
-        createAt: DateTime.local(2025, 9, 12).toJSDate(),
+        createAt: DateTime.local(2025, 9, 12),
         amount: 3000,
         currency: 'won',
         type: 'income',
@@ -95,7 +95,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 1,
-        createAt: DateTime.local(2025, 9, 12).toJSDate(),
+        createAt: DateTime.local(2025, 9, 12),
         amount: 2000,
         currency: 'won',
         type: 'expense',
@@ -103,7 +103,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 3,
-        createAt: DateTime.local(2025, 9, 12).toJSDate(),
+        createAt: DateTime.local(2025, 9, 12),
         amount: 8000,
         currency: 'won',
         type: 'expense',
@@ -111,7 +111,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 7,
-        createAt: DateTime.local(2025, 9, 12).toJSDate(),
+        createAt: DateTime.local(2025, 9, 12),
         currency: 'won',
         type: 'expense',
         memo: '점심',
@@ -119,7 +119,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 8,
-        createAt: DateTime.local(2025, 9, 13).toJSDate(),
+        createAt: DateTime.local(2025, 9, 13),
         currency: 'won',
         type: 'expense',
         memo: '점심',
@@ -127,7 +127,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 4,
-        createAt: DateTime.local(2025, 9, 13).toJSDate(),
+        createAt: DateTime.local(2025, 9, 13),
         amount: 2000,
         currency: 'won',
         type: 'expense',
@@ -135,7 +135,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 2,
-        createAt: DateTime.local(2025, 9, 13).toJSDate(),
+        createAt: DateTime.local(2025, 9, 13),
         amount: 4500,
         currency: 'won',
         type: 'income',
@@ -144,7 +144,7 @@ export const transactions: TransactionT[] = [
 
     {
         id: 67,
-        createAt: DateTime.local(2025, 9, 13).toJSDate(),
+        createAt: DateTime.local(2025, 9, 13),
         amount: 4500,
         currency: 'won',
         type: 'income',
@@ -153,7 +153,7 @@ export const transactions: TransactionT[] = [
 
     {
         id: 68,
-        createAt: DateTime.local(2025, 9, 11).toJSDate(),
+        createAt: DateTime.local(2025, 9, 11),
         amount: 4500,
         currency: 'won',
         type: 'income',
@@ -161,7 +161,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 69,
-        createAt: DateTime.local(2025, 9, 15).toJSDate(),
+        createAt: DateTime.local(2025, 9, 15),
         amount: 1200,
         currency: 'won',
         type: 'expense',
@@ -169,7 +169,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 70,
-        createAt: DateTime.local(2025, 9, 11).toJSDate(),
+        createAt: DateTime.local(2025, 9, 11),
         amount: 5000,
         currency: 'won',
         type: 'income',
@@ -177,7 +177,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 71,
-        createAt: DateTime.local(2025, 9, 12).toJSDate(),
+        createAt: DateTime.local(2025, 9, 12),
         amount: 3000,
         currency: 'won',
         type: 'expense',
@@ -185,7 +185,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 72,
-        createAt: DateTime.local(2025, 9, 18).toJSDate(),
+        createAt: DateTime.local(2025, 9, 18),
         amount: 802300,
         currency: 'won',
         type: 'income',
@@ -193,7 +193,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 73,
-        createAt: DateTime.local(2025, 9, 16).toJSDate(),
+        createAt: DateTime.local(2025, 9, 16),
         amount: 2500,
         currency: 'won',
         type: 'expense',
@@ -201,7 +201,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 74,
-        createAt: DateTime.local(2025, 9, 16).toJSDate(),
+        createAt: DateTime.local(2025, 9, 16),
         amount: 10000,
         currency: 'won',
         type: 'income',
@@ -209,7 +209,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 75,
-        createAt: DateTime.local(2025, 9, 17).toJSDate(),
+        createAt: DateTime.local(2025, 9, 17),
         amount: 4000,
         currency: 'won',
         type: 'expense',
@@ -217,7 +217,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 76,
-        createAt: DateTime.local(2025, 9, 17).toJSDate(),
+        createAt: DateTime.local(2025, 9, 17),
         amount: 6000,
         currency: 'won',
         type: 'income',
@@ -225,7 +225,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 77,
-        createAt: DateTime.local(2025, 9, 18).toJSDate(),
+        createAt: DateTime.local(2025, 9, 18),
         amount: 3500,
         currency: 'won',
         type: 'expense',
@@ -233,7 +233,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 78,
-        createAt: DateTime.local(2025, 9, 18).toJSDate(),
+        createAt: DateTime.local(2025, 9, 18),
         amount: 7000,
         currency: 'won',
         type: 'income',
@@ -241,7 +241,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 79,
-        createAt: DateTime.local(2025, 9, 19).toJSDate(),
+        createAt: DateTime.local(2025, 9, 19),
         amount: 2200,
         currency: 'won',
         type: 'expense',
@@ -249,7 +249,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 80,
-        createAt: DateTime.local(2025, 9, 19).toJSDate(),
+        createAt: DateTime.local(2025, 9, 19),
         amount: 9000,
         currency: 'won',
         type: 'income',
@@ -257,7 +257,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 81,
-        createAt: DateTime.local(2025, 9, 20).toJSDate(),
+        createAt: DateTime.local(2025, 9, 20),
         amount: 1800,
         currency: 'won',
         type: 'expense',
@@ -265,7 +265,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 82,
-        createAt: DateTime.local(2025, 9, 20).toJSDate(),
+        createAt: DateTime.local(2025, 9, 20),
         amount: 11000,
         currency: 'won',
         type: 'income',
@@ -273,7 +273,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 83,
-        createAt: DateTime.local(2025, 9, 21).toJSDate(),
+        createAt: DateTime.local(2025, 9, 21),
         amount: 2700,
         currency: 'won',
         type: 'expense',
@@ -281,7 +281,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 84,
-        createAt: DateTime.local(2025, 9, 21).toJSDate(),
+        createAt: DateTime.local(2025, 9, 21),
         amount: 13000,
         currency: 'won',
         type: 'income',
@@ -289,7 +289,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 85,
-        createAt: DateTime.local(2025, 9, 22).toJSDate(),
+        createAt: DateTime.local(2025, 9, 22),
         amount: 3200,
         currency: 'won',
         type: 'expense',
@@ -297,7 +297,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 86,
-        createAt: DateTime.local(2025, 9, 22).toJSDate(),
+        createAt: DateTime.local(2025, 9, 22),
         amount: 14000,
         currency: 'won',
         type: 'income',
@@ -305,7 +305,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 87,
-        createAt: DateTime.local(2025, 9, 23).toJSDate(),
+        createAt: DateTime.local(2025, 9, 23),
         amount: 2100,
         currency: 'won',
         type: 'expense',
@@ -313,7 +313,7 @@ export const transactions: TransactionT[] = [
     },
     {
         id: 88,
-        createAt: DateTime.local(2025, 9, 23).toJSDate(),
+        createAt: DateTime.local(2025, 9, 23),
         amount: 15000,
         currency: 'won',
         type: 'income',
