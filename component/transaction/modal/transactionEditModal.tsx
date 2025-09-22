@@ -26,18 +26,18 @@ function TransactionEditModal({at}: { at: DateTime }) {
     const [id, setId] = useState<number>(0);
     const [type, setType] = useState<'income' | 'expense'>('income');
     const [currency, setCurrency] = useState<'usd' | 'won'>('won');
-    const [amount, setAmount] = useState<number>(0);
-    const [memo, setMemo] = useState<string>('');
-    const [createAt, setCreateAt] = useState<DateTime>(at);
+    const transactionContext = useContext(TransactionContext);
+    const [amount, setAmount] = useState<number>(transactionContext.amount ?? 0);
+    const [memo, setMemo] = useState<string>(transactionContext.memo ?? '');
+    const [createAt, setCreateAt] = useState<DateTime>(transactionContext.createAt);
 
     const modalContext = useContext(ModalContext);
     const {isVisible, setIsVisible} = modalContext;
     const {transactions, setTransactions} = useContext(TransactionsContext);
-    const transactionContext = useContext(TransactionContext);
 
     const viewScale = useSharedValue(1);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-    const [transactionType, setTransactionType] = useState<'income' | 'expense'>('income');
+    const [transactionType, setTransactionType] = useState<'income' | 'expense'>(transactionContext.type);
     const opacity = useSharedValue(0);
     const animatedHeight = useSharedValue(-10);
     const calendarAnimatedStyles = useAnimatedStyle(() => {

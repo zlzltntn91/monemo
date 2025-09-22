@@ -173,7 +173,6 @@ export default function CalendarPage() {
                         </Animated.ScrollView>
                     </View>
                 </Animated.View>
-
             </TransactionsContext.Provider>
         </MyView>
     );

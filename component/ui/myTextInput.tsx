@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {LAYOUTS} from "@/constatns/space";
 
 type MyTextInputPropsT = {
     appendString?: string,
@@ -12,12 +13,9 @@ function MyTextInput(props: MyTextInputPropsT & React.ComponentProps<typeof Text
     return (
         <>
             <View style={{
-                padding: 8,
                 flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
             }}>
-                <TextInput style={[{fontSize: 16, flex: 1, borderColor: 'transparent'}]}
+                <TextInput style={[{fontSize: 16, borderColor: 'transparent'}]}
                            underlineColorAndroid={'transparent'}
                            focusable={true}
                            autoCapitalize={'none'}
@@ -28,14 +26,14 @@ function MyTextInput(props: MyTextInputPropsT & React.ComponentProps<typeof Text
                 </TextInput>
                 {appendString && <Text>{appendString}</Text>}
             </View>
-            <View style={{
-                top: -10,
-                position: 'sticky',
-                marginLeft: 8,
-                marginRight: 8,
-                borderBottomWidth: 1,
-                borderColor: '#BDBDBD'
-            }}></View>
+            {/*<View style={{*/}
+            {/*    top: -10,*/}
+            {/*    position: 'sticky',*/}
+            {/*    marginLeft: 8,*/}
+            {/*    marginRight: 8,*/}
+            {/*    borderBottomWidth: 1,*/}
+            {/*    borderColor: '#BDBDBD'*/}
+            {/*}}></View>*/}
         </>
     )
 }

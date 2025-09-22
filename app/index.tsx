@@ -1,123 +1,194 @@
-import {Button, Pressable, Text, View, Animated, Touchable, TouchableOpacity} from "react-native";
+import {Pressable, Text, TouchableOpacity, useWindowDimensions, View} from "react-native";
 import MyView from "@/component/myView";
-import {Link} from "expo-router";
-import {useRef} from "react";
-import {alignSelf} from "@mui/system";
+import MyTextInput from "@/component/ui/myTextInput";
+import MyCard from "@/component/ui/myCard";
+import {LinearGradient} from "expo-linear-gradient";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {COLORS} from "@/constatns/color";
+import {LAYOUTS, SPACES} from "@/constatns/space";
+import Checkbox from 'expo-checkbox';
+import {useState} from "react";
+import {flexDirection} from "@mui/system";
+
 
 export default function Index() {
 
-    const opacity = useRef(new Animated.Value(0)).current;
-    const translate = useRef(new Animated.Value(0)).current;
+    const {width, height} = useWindowDimensions();
+    const [rememberMe, setRememberMe] = useState<boolean | undefined>(false);
+    console.log(width);
+
+    const onLoginPress = () => {
+
+    }
+
+    const onSignUpPress = () => {
+
+    }
 
     return (
-        <MyView>
-            <View >
-                <Text style={{
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    marginTop: 100,
-                }}>Animated</Text>
-                <View>
-                    <Text style={{textAlign: 'center'}}>
-                        Hello Animated
-                    </Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-                        <Animated.View
-                            style={{
-                                width: 100,
-                                height: 100,
-                                backgroundColor: 'red',
-                                opacity: opacity,
-                                transform: [{translateX: translate}],
-                            }}
-                        >
-                        </Animated.View>
+        <MyView style={{}}>
+            <View style={{
+                ...LAYOUTS.minMax,
+                flex: 1,
+                gap: 24,
+                margin: SPACES.xxl,
+                ...LAYOUTS.center
+            }}>
+                <View style={{height: 200, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{flex: 1, ...LAYOUTS.center}}>
+                        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 56}}>MoneMo</Text>
                     </View>
-
-                    <Pressable
-                        style={{
-                            width: 80,
-                            height: 30,
-                            backgroundColor: 'red',
-                            borderRadius: 8,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                        onPress={() => {
-                            Animated.sequence([
-                                    Animated.timing(opacity, {
-                                        toValue: 1,
-                                        duration: 500,
-                                        useNativeDriver: true,
-                                    }),
-                                    Animated.timing(translate, {
-                                        toValue: 800,
-                                        duration: 500,
-                                        useNativeDriver: true,
-                                    })
-                                ]
-                            ).start();
-                        }}
-                    >
-                        <Text>left to right</Text>
-                    </Pressable>
-
-                    <Pressable
-                        style={{
-                            width: 80,
-                            height: 30,
-                            backgroundColor: 'red',
-                            borderRadius: 8,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                        onPress={() => {
-                            Animated.sequence([
-                                    Animated.timing(opacity, {
-                                        toValue: 1,
-                                        duration: 500,
-                                        useNativeDriver: true,
-                                    }),
-                                    Animated.timing(translate, {
-                                        toValue: 0,
-                                        duration: 500,
-                                        useNativeDriver: true,
-                                    })
-                                ]
-                            ).start();
-                        }}
-                    >
-                        <Text>right to left</Text>
-                    </Pressable>
-                    <Pressable>
-                        <Text>parallel</Text>
-                    </Pressable>
+                    <View style={{flexDirection: 'row', flex: 1, ...LAYOUTS.center}}>
+                        <Text style={{color: 'white', textAlign: 'center'}}>아직 회원이 아니신가요?</Text>
+                        <Text>{' '}</Text>
+                        <Pressable>
+                            <Text style={{color: 'white', textAlign: 'center'}}>회원가입</Text>
+                            <View style={{
+                                height: 1,
+                                borderTopWidth: 0.2,
+                                borderColor: COLORS.BORDER
+                            }}>
+                            </View>
+                        </Pressable>
+                    </View>
                 </View>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={{
-                        width: 80,
-                        height: 30,
-                        backgroundColor: 'red',
-                        borderRadius: 8,
+
+                <MyCard style={{
+                    width: '100%',
+                    flex: 0.12,
+                    ...LAYOUTS.paddingLR('md'),
+                    justifyContent: 'space-around',
+                }}>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingLeft: 8
+                        gap: SPACES.xs
                     }}>
-                    <Text numberOfLines={1} ellipsizeMode={'tail'} style={{color: 'white'}}>TouchableOpacity</Text>
+                        <MaterialCommunityIcons name={'email-outline'} size={SPACES.md}
+                                                color={'#3D5AFE'}></MaterialCommunityIcons>
+                        <MyTextInput
+                            textContentType={'emailAddress'}
+                            keyboardType={'email-address'}
+                            autoCorrect={false}
+                            style={{fontSize: SPACES.lg}}
+                            placeholder={'ID'}></MyTextInput>
+                    </View>
+                    <View style={{
+                        borderWidth: 1,
+                        borderColor: COLORS.BORDER
+                    }}></View>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row', alignItems: 'center', gap: SPACES.xs
+                    }}>
+                        <MaterialCommunityIcons name={'lock-outline'} size={SPACES.md}
+                                                color={'#3D5AFE'}></MaterialCommunityIcons>
+                        <View style={{}}>
+                            <MyTextInput
+                                textContentType={'password'}
+                                keyboardType={'default'}
+                                secureTextEntry={true}
+                                autoCorrect={false}
+                                style={{fontSize: SPACES.lg}}
+                                placeholder={'Password'}></MyTextInput>
+                        </View>
+                    </View>
+                </MyCard>
+                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Pressable style={{flexDirection: 'row', gap: 8}}
+                               onPress={() => setRememberMe(!rememberMe)}>
+                        <Checkbox
+                            value={rememberMe}
+                            onValueChange={setRememberMe}
+                            color='#3D5AFE'
+                            style={{
+                                borderColor: 'transparent',
+                                width: 20,
+                                height: 20,
+                            }}>
+                        </Checkbox>
+                        <Text style={{color: 'white'}}>Remember me</Text>
+                    </Pressable>
+                    <TouchableOpacity>
+                        <Text
+                            numberOfLines={1}
+                            ellipsizeMode={'tail'}
+                            style={{color: 'white', fontSize: SPACES.md}}>비밀번호를 잊으셨나요?</Text>
+                        <View style={{
+                            height: 1,
+                            top: 1,
+                            borderTopWidth: 1,
+                            borderColor: COLORS.BORDER
+                        }}></View>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={onLoginPress}
+                                  style={{
+                                      width: '100%',
+                                  }}>
+                    <LinearGradient
+                        style={{
+                            height: SPACES.lg * 3,
+                            ...LAYOUTS.center,
+                            borderRadius: 8,
+                            padding: 8,
+                        }}
+                        colors={['#3D5AFE', '#304FFE', '#3D5AFE']}
+                        locations={[0, 0.5, 1]}
+                    >
+                        <Text style={{
+                            color: 'white', textAlign: 'center', textAlignVertical: 'center',
+
+                        }}>
+                            로그인
+                        </Text>
+                    </LinearGradient>
                 </TouchableOpacity>
-                <Pressable
-                    style={{
-                        width: 80,
-                        height: 30,
-                        backgroundColor: 'red',
-                        borderRadius: 8,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: SPACES.sm, width: '100%'}}>
+                    <View style={{
+                        flex: 1,
+                        borderTopWidth: 0.2,
+                        borderColor: COLORS.BORDER
                     }}>
-                    <Text style={{color: 'white'}}>Pressable</Text>
-                </Pressable>
+                    </View>
+                    <Text style={{color: 'white'}}>또는</Text>
+                    <View style={{
+                        flex: 1,
+                        borderTopWidth: 0.2,
+                        borderColor: COLORS.BORDER
+                    }}>
+                    </View>
+                </View>
+                <TouchableOpacity onPress={onLoginPress}
+                                  style={{
+                                      height: SPACES.lg * 3,
+                                      width: '100%',
+                                      backgroundColor: 'white',
+                                      ...LAYOUTS.center,
+                                      borderRadius: 8,
+                                  }}>
+
+                    <Text style={{
+                        color: 'black', textAlign: 'center', textAlignVertical: 'center',
+                    }}>
+                        구글 계정으로 로그인
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onLoginPress}
+                                  style={{
+                                      height: SPACES.lg * 3,
+                                      width: '100%',
+                                      backgroundColor: 'white',
+                                      ...LAYOUTS.center,
+                                      borderRadius: 8,
+                                  }}>
+                    <Text style={{
+                        color: 'black', textAlign: 'center', textAlignVertical: 'center',
+                    }}>
+                        카카오톡으로 로그인
+                    </Text>
+                </TouchableOpacity>
             </View>
         </MyView>
     );
