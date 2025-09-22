@@ -4,8 +4,6 @@ export const COLORS = {
     INCOME_BOLD: '#64DD17',
     EXPENSE: '#F3E5F5',
     EXPENSE_BOLD: '#D50000',
-
-
     BORDER: '#E0E0E0',
     DELETE: '#F82C2C',
     TEXT_SECONDARY: 'grey',
