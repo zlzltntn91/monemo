@@ -16,3 +16,10 @@ export type TransactionT = {
     setMemo?: React.Dispatch<React.SetStateAction<string>>,
     setAmount?: React.Dispatch<React.SetStateAction<number>>,
 }
+
+export type SignUpForm = {
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirm: string,
+}

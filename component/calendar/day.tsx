@@ -7,10 +7,9 @@ import Transaction from "@/component/transaction/transaction";
 import {DateTime} from "luxon";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
 import ModalContext from "@/component/transaction/modal/modalContext";
-import calendarContext from "@/component/calendar/context/calendarContext";
-import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
+// import TransactionDetailModal from "@/component/transaction/modal/transactionDetailModal";
 import TransactionContext, {defaultContextValue} from "@/component/transaction/transactionContext";
-import TransactionEditModal from "@/component/transaction/modal/transactionEditModal";
+// import TransactionEditModal from "@/component/transaction/modal/transactionEditModal";
 
 type Props = {
     style?: any,
@@ -136,17 +135,17 @@ export const Day = (props: Props) => {
                         )
                     }
                 </Pressable>
-                <ModalContext.Provider value={{isVisible, setIsVisible}}>
-                    <TransactionEditModal at={DateTime.local(item.year, item.month, day)}></TransactionEditModal>
-                </ModalContext.Provider>
-                <ModalContext.Provider value={{
-                    isVisible: transactionDetailVisible,
-                    setIsVisible: setTransactionDetailVisible
-                }}>
-                    <TransactionContext.Provider value={transaction}>
-                        <TransactionDetailModal></TransactionDetailModal>
-                    </TransactionContext.Provider>
-                </ModalContext.Provider>
+                {/*<ModalContext.Provider value={{isVisible, setIsVisible}}>*/}
+                {/*    <TransactionEditModal at={DateTime.local(item.year, item.month, day)}></TransactionEditModal>*/}
+                {/*</ModalContext.Provider>*/}
+                {/*<ModalContext.Provider value={{*/}
+                {/*    isVisible: transactionDetailVisible,*/}
+                {/*    setIsVisible: setTransactionDetailVisible*/}
+                {/*}}>*/}
+                {/*    <TransactionContext.Provider value={transaction}>*/}
+                {/*        <TransactionDetailModal></TransactionDetailModal>*/}
+                {/*    </TransactionContext.Provider>*/}
+                {/*</ModalContext.Provider>*/}
             </>
         );
     }

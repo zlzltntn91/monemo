@@ -8,7 +8,6 @@ import Constants from "expo-constants";
 export default function MyView(props: { children?: ReactNode } & React.ComponentProps<typeof SafeAreaView>) {
     return (
         <>
-
             <SafeAreaProvider>
                 <SafeAreaView style={[{flex: 1, backgroundColor: '#212121'}]} testID={'myView'}>
                     {props.children}

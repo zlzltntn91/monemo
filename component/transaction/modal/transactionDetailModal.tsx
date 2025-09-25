@@ -1,14 +1,12 @@
 import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, Modal, Pressable} from 'react-native';
+import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import ModalContext from "@/component/transaction/modal/modalContext";
 import {useSharedValue, withSequence, withTiming} from "react-native-reanimated";
-import TransactionContext from "@/component/transaction/transactionContext";
+import {TransactionContext} from "@/component/transaction/transactionContext";
 import MyCard from "@/component/ui/myCard";
 import Separator from "@/component/transaction/separator";
-import {flexDirection} from "@mui/system";
 import {COLORS} from "@/constatns/color";
 import TransactionEditModal from "@/component/transaction/modal/transactionEditModal";
-import {DateTime} from "luxon";
 
 function TransactionDetailModal() {
     const modalContext = useContext(ModalContext);

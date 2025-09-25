@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Animated, {useAnimatedStyle, useSharedValue, withSequence, withTiming} from "react-native-reanimated";
-import {DimensionValue, KeyboardAvoidingView, Modal, Platform, Pressable, Text, View} from "react-native";
+import {DimensionValue, Modal, Pressable, Text, View} from "react-native";
 import MyTextInput from "@/component/ui/myTextInput";
 import MyCard from "@/component/ui/myCard";
 import {CalendarDataContext} from "@/component/calendar/context/calendarDataContext";
@@ -10,9 +10,9 @@ import CalendarHeader from "@/component/calendar/calendarHeader";
 import CalendarContext from "@/component/calendar/context/calendarContext";
 import ModalContext from "@/component/transaction/modal/modalContext";
 import {DateTime} from "luxon";
-import TransactionsContext from "@/component/transaction/transactionsContext";
 import {TransactionT} from "@/constatns/types/types";
-import TransactionContext from "@/component/transaction/transactionContext";
+import TransactionsContext from "@/component/transaction/transactionsContext";
+import {TransactionContext} from "@/component/transaction/transactionContext";
 
 const cellWidth = "14.28%" as DimensionValue;
 const cellHeight = "16.67%" as DimensionValue;
@@ -27,13 +27,13 @@ function TransactionEditModal({at}: { at: DateTime }) {
     const [type, setType] = useState<'income' | 'expense'>('income');
     const [currency, setCurrency] = useState<'usd' | 'won'>('won');
     const transactionContext = useContext(TransactionContext);
+    const [transactions, setTransactions] = useState<TransactionT[]>([])
     const [amount, setAmount] = useState<number>(transactionContext.amount ?? 0);
     const [memo, setMemo] = useState<string>(transactionContext.memo ?? '');
     const [createAt, setCreateAt] = useState<DateTime>(transactionContext.createAt);
 
     const modalContext = useContext(ModalContext);
     const {isVisible, setIsVisible} = modalContext;
-    const {transactions, setTransactions} = useContext(TransactionsContext);
 
     const viewScale = useSharedValue(1);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);

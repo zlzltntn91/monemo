@@ -24,4 +24,3 @@ export const defaultContextValue: TransactionT = {
 };
 
 export const TransactionContext = createContext(defaultContextValue);
-export default TransactionContext;

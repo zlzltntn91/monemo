@@ -6,7 +6,6 @@ function MyCard(props: React.ComponentProps<typeof View>) {
         <View style={[{
             borderRadius: 8,
             backgroundColor: 'white',
-            padding: 8,
             shadowRadius: 4,
             shadowColor: 'grey',
             shadowOpacity: 0.1,
